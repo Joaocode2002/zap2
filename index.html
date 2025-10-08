@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRUPO FREE</title>
+    <title>Método Delay - LUCRO REAL</title>
     <link rel="icon" type="image/png" href="bola.png">
     <link rel="shortcut icon" type="image/png" href="bola.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,12 +38,13 @@
             padding: 0;
             height: 100%;
             overflow-x: hidden;
+            background: #000000;
         }
 
         body {
             font-family: 'Chakra Petch', 'Arial', sans-serif !important;
             font-weight: 600;
-            background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #1a1a1a 100%);
+            background: #000000;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -509,11 +510,38 @@
             font-family: 'Chakra Petch', 'Arial', sans-serif !important;
         }
 
+        .video-container {
+            text-align: center;
+            margin: 20px 0 0px 0;
+        }
+
+        #main-video {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Esconder botão de tela cheia */
+        #main-video::-webkit-media-controls-fullscreen-button {
+            display: none !important;
+        }
+
+        #main-video::-webkit-media-controls {
+            overflow: visible !important;
+        }
+
+        /* Para Firefox */
+        #main-video::-moz-media-controls-fullscreen-button {
+            display: none !important;
+        }
+
         .arrow {
             color: #ff6b6b;
-            font-size: 144px;
+            font-size: 100px;
             text-align: center;
-            margin: 30px 0;
+            margin: 0px 0 0px 0;
             font-family: 'Chakra Petch', 'Arial', sans-serif !important;
             animation: bounceArrow 2s ease-in-out infinite;
         }
@@ -692,17 +720,21 @@
             }
 
             .header-text {
-                font-size: 24px;
-                letter-spacing: 2px;
+                font-size: 16px;
+                letter-spacing: 1px;
                 white-space: nowrap;
             }
 
-            .container {
-                margin-top: 20px;
+            .header-banner {
+                padding: 6px 0;
             }
 
-            .header {
-                top: 10px;
+            .container {
+                margin-top: 30px;
+            }
+
+            .logo-section {
+                padding: 15px 0 25px 0;
             }
 
             .content-box {
@@ -774,9 +806,17 @@
             }
 
             .header-text {
-                font-size: 26px;
-                letter-spacing: 2px;
+                font-size: 20px;
+                letter-spacing: 1px;
                 white-space: nowrap;
+            }
+
+            .header-banner {
+                padding: 7px 0;
+            }
+
+            .logo-section {
+                padding: 18px 0 30px 0;
             }
 
             .description {
@@ -1040,6 +1080,12 @@
                 <div class="main-headline animated fadeInRight">
                     ENTRE AGORA E LUCRE COM O DELAY ESPORTIVO, SEM RISCOS E COM LUCRO GARANTIDO!
                 </div>
+                <div class="video-container animated fadeInLeft">
+                    <video id="main-video" controls controlsList="nodownload nofullscreen noremoteplayback" disablePictureInPicture autoplay muted>
+                        <source src="video.mp4" type="video/mp4">
+                        Seu navegador não suporta o elemento de vídeo.
+                    </video>
+                </div>
                 <div class="arrow animated fadeInLeft">↓</div>
                 <button class="cta-button pulse animated fadeInRight" onclick="redirectToWhatsApp()">
                     ENTRE PARA O GRUPO!
@@ -1131,6 +1177,11 @@
             } else {
                 // Se chegou a 1, mudar a mensagem para "ÚLTIMA VAGA GRATUITA"
                 document.getElementById('vagas-text').innerHTML = 'ÚLTIMA VAGA GRATUITA';
+                
+                // Na próxima entrada, resetar para 17 vagas
+                setTimeout(function() {
+                    localStorage.setItem('vagasRestantes', 17);
+                }, 1000);
             }
         }
 
@@ -1139,6 +1190,58 @@
             setTimeout(function() {
                 atualizarVagas();
             }, 1500);
+
+            // Configurar vídeo com restrições
+            const video = document.getElementById('main-video');
+            if (video) {
+                // Iniciar vídeo automaticamente
+                video.play().catch(function(error) {
+                    console.log('Autoplay foi bloqueado:', error);
+                });
+                // Desabilitar menu de contexto (botão direito)
+                video.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                });
+
+                // Desabilitar arrastar
+                video.addEventListener('dragstart', function(e) {
+                    e.preventDefault();
+                });
+
+                // Desabilitar seleção
+                video.addEventListener('selectstart', function(e) {
+                    e.preventDefault();
+                });
+
+                // Desabilitar teclas de atalho
+                video.addEventListener('keydown', function(e) {
+                    // Desabilitar F (tela cheia), M (mute), setas, etc.
+                    if (e.key === 'f' || e.key === 'F' || e.key === 'm' || e.key === 'M' || 
+                        e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                        e.preventDefault();
+                    }
+                });
+
+                // Remover completamente a funcionalidade de tela cheia
+                video.addEventListener('fullscreenchange', function(e) {
+                    if (document.fullscreenElement === video) {
+                        document.exitFullscreen();
+                    }
+                });
+
+                // Interceptar tentativas de tela cheia
+                video.addEventListener('webkitfullscreenchange', function(e) {
+                    if (document.webkitFullscreenElement === video) {
+                        document.webkitExitFullscreen();
+                    }
+                });
+
+                video.addEventListener('mozfullscreenchange', function(e) {
+                    if (document.mozFullScreenElement === video) {
+                        document.mozCancelFullScreen();
+                    }
+                });
+            }
         });
 
         function redirectToWhatsApp() {
