@@ -334,39 +334,30 @@
         }
 
         .header {
-            position: fixed;
+            position: relative;
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 9999;
-            margin: 0;
-            padding: 0;
-            transform: translateY(0);
-            border: none;
-            outline: none;
-            will-change: transform;
-            backface-visibility: hidden;
-        }
-
-
-        .header-banner {
-            background: #1565c0;
-            padding: 8px 0;
+            z-index: 10;
             text-align: center;
-            width: 100%;
-            margin: 0;
-            border: none;
-            outline: none;
-            display: block;
         }
+
 
         .header-text {
             color: white;
-            font-size: 18px;
+            background: #1565c0;
+            padding: 12px 25px;
+            border-radius: 0;
+            font-size: 28px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-shadow: none;
             font-family: 'Chakra Petch', 'Arial', sans-serif !important;
+            white-space: nowrap;
+            display: block;
+            box-shadow: none;
+            width: 100%;
             margin: 0;
         }
 
@@ -375,18 +366,6 @@
             display: inline-block;
         }
 
-        .header-bottom {
-            background: #000;
-            height: 4px;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            border: none;
-            outline: none;
-            display: block;
-            line-height: 0;
-            font-size: 0;
-        }
 
         .logo-section {
             display: flex;
@@ -535,6 +514,86 @@
         /* Para Firefox */
         #main-video::-moz-media-controls-fullscreen-button {
             display: none !important;
+        }
+
+        /* Controles específicos para mobile */
+        @media (max-width: 768px) {
+            #main-video::-webkit-media-controls-panel {
+                display: none !important;
+            }
+            
+            #main-video::-webkit-media-controls-play-button {
+                display: block !important;
+            }
+            
+            #main-video::-webkit-media-controls-timeline {
+                display: none !important;
+            }
+            
+            #main-video::-webkit-media-controls-current-time-display {
+                display: none !important;
+            }
+            
+            #main-video::-webkit-media-controls-time-remaining-display {
+                display: none !important;
+            }
+            
+            #main-video::-webkit-media-controls-mute-button {
+                display: block !important;
+            }
+            
+            #main-video::-webkit-media-controls-volume-slider {
+                display: block !important;
+            }
+            
+            #main-video::-webkit-media-controls-fullscreen-button {
+                display: none !important;
+            }
+            
+            #main-video::-webkit-media-controls-rewind-button {
+                display: none !important;
+            }
+            
+            #main-video::-webkit-media-controls-return-to-realtime-button {
+                display: none !important;
+            }
+            
+            #main-video::-webkit-media-controls-toggle-closed-captions-button {
+                display: none !important;
+            }
+            
+            /* Para Firefox mobile */
+            #main-video::-moz-media-controls-panel {
+                display: none !important;
+            }
+            
+            #main-video::-moz-media-controls-play-button {
+                display: block !important;
+            }
+            
+            #main-video::-moz-media-controls-timeline {
+                display: none !important;
+            }
+            
+            #main-video::-moz-media-controls-current-time-display {
+                display: none !important;
+            }
+            
+            #main-video::-moz-media-controls-time-remaining-display {
+                display: none !important;
+            }
+            
+            #main-video::-moz-media-controls-mute-button {
+                display: block !important;
+            }
+            
+            #main-video::-moz-media-controls-volume-slider {
+                display: block !important;
+            }
+            
+            #main-video::-moz-media-controls-fullscreen-button {
+                display: none !important;
+            }
         }
 
         .arrow {
@@ -689,6 +748,67 @@
             }
         }
 
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .header-text {
+                font-size: 20px;
+                letter-spacing: 1px;
+                white-space: nowrap;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .header-text {
+                font-size: 22px;
+                letter-spacing: 1px;
+                white-space: nowrap;
+                padding: 11px 22px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .header-text {
+                font-size: 24px;
+                white-space: nowrap;
+                padding: 12px 25px;
+            }
+        }
+
+        @media (min-width: 1025px) and (max-width: 1200px) {
+            .header-text {
+                font-size: 26px;
+                white-space: nowrap;
+                padding: 13px 28px;
+            }
+        }
+
+        @media (min-width: 1201px) {
+            .header-text {
+                font-size: 30px;
+                white-space: nowrap;
+                padding: 14px 30px;
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header-text {
+                font-size: 18px;
+                letter-spacing: 1px;
+                white-space: nowrap;
+                padding: 8px 18px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .header-text {
+                font-size: 18px;
+                letter-spacing: 1px;
+                white-space: normal;
+                padding: 8px 15px;
+            }
+        }
+
         /* Responsivo - Mobile Pequeno (320px - 480px) */
         @media (max-width: 480px) {
             .container {
@@ -717,16 +837,6 @@
                 font-size: 16px;
                 line-height: 1.2;
                 margin-bottom: 20px;
-            }
-
-            .header-text {
-                font-size: 16px;
-                letter-spacing: 1px;
-                white-space: nowrap;
-            }
-
-            .header-banner {
-                padding: 6px 0;
             }
 
             .container {
@@ -1061,10 +1171,7 @@
     </div>
 
     <div class="header">
-        <div class="header-banner">
-            <div class="header-text" id="vagas-text">ÚLTIMAS <span id="numero-vagas">17</span> VAGAS GRATUITAS</div>
-        </div>
-        <div class="header-bottom"></div>
+        <div class="header-text" id="vagas-text">ÚLTIMAS <span id="numero-vagas">17</span> VAGAS GRATUITAS</div>
     </div>
 
     <div class="container">
@@ -1152,44 +1259,72 @@
             e.preventDefault();
         });
 
-        // Sistema de aleatoriedade para vagas
+        let vagasAtuais = 17;
+
         function atualizarVagas() {
-            // Obter o número atual de vagas do localStorage ou usar 17 como padrão
-            let vagasAtuais = parseInt(localStorage.getItem('vagasRestantes')) || 17;
-            
-            // Se ainda há vagas disponíveis (mais de 1), diminuir em 1
-            if (vagasAtuais > 1) {
-                vagasAtuais -= 1;
+            if (vagasAtuais === 1) {
+                vagasAtuais = 17;
                 localStorage.setItem('vagasRestantes', vagasAtuais);
                 
-                // Atualizar o número na tela
-                document.getElementById('numero-vagas').textContent = vagasAtuais;
+                const vagasText = document.getElementById('vagas-text');
+                vagasText.innerHTML = `ÚLTIMAS <span id="numero-vagas">${vagasAtuais}</span> VAGAS GRATUITAS`;
                 
-                // Adicionar efeito visual de mudança
                 const elementoVagas = document.getElementById('numero-vagas');
-                elementoVagas.style.transform = 'scale(1.2)';
-                elementoVagas.style.color = '#ff6b6b';
-                
-                setTimeout(() => {
-                    elementoVagas.style.transform = 'scale(1)';
-                    elementoVagas.style.color = 'white';
-                }, 500);
+                if (elementoVagas) {
+                    elementoVagas.style.transform = 'scale(1.2)';
+                    elementoVagas.style.color = '#00bcd4';
+                    
+                    setTimeout(() => {
+                        elementoVagas.style.transform = 'scale(1)';
+                        elementoVagas.style.color = 'white';
+                    }, 500);
+                }
             } else {
-                // Se chegou a 1, mudar a mensagem para "ÚLTIMA VAGA GRATUITA"
-                document.getElementById('vagas-text').innerHTML = 'ÚLTIMA VAGA GRATUITA';
+                vagasAtuais--;
+                localStorage.setItem('vagasRestantes', vagasAtuais);
                 
-                // Na próxima entrada, resetar para 17 vagas
-                setTimeout(function() {
-                    localStorage.setItem('vagasRestantes', 17);
-                }, 1000);
+                const vagasText = document.getElementById('vagas-text');
+                const numeroVagas = document.getElementById('numero-vagas');
+                
+                if (vagasAtuais === 1) {
+                    vagasText.innerHTML = 'ÚLTIMA VAGA GRATUITA';
+                } else {
+                    vagasText.innerHTML = `ÚLTIMAS <span id="numero-vagas">${vagasAtuais}</span> VAGAS GRATUITAS`;
+                }
+                
+                const elementoVagas = document.getElementById('numero-vagas');
+                if (elementoVagas) {
+                    elementoVagas.style.transform = 'scale(1.2)';
+                    elementoVagas.style.color = '#ff6b6b';
+                    
+                    setTimeout(() => {
+                        elementoVagas.style.transform = 'scale(1)';
+                        elementoVagas.style.color = 'white';
+                    }, 500);
+                }
             }
         }
 
-        // Executar quando a página carregar com delay de 1.5 segundos
+        function carregarVagas() {
+            const vagasSalvas = localStorage.getItem('vagasRestantes');
+            if (vagasSalvas !== null) {
+                vagasAtuais = parseInt(vagasSalvas);
+            }
+            
+            const vagasText = document.getElementById('vagas-text');
+            if (vagasAtuais === 1) {
+                vagasText.innerHTML = 'ÚLTIMA VAGA GRATUITA';
+            } else {
+                vagasText.innerHTML = `ÚLTIMAS <span id="numero-vagas">${vagasAtuais}</span> VAGAS GRATUITAS`;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
+            carregarVagas();
+            
+            setTimeout(() => {
                 atualizarVagas();
-            }, 1500);
+            }, 2000);
 
             // Configurar vídeo com restrições
             const video = document.getElementById('main-video');
@@ -1198,6 +1333,7 @@
                 video.play().catch(function(error) {
                     console.log('Autoplay foi bloqueado:', error);
                 });
+                
                 // Desabilitar menu de contexto (botão direito)
                 video.addEventListener('contextmenu', function(e) {
                     e.preventDefault();
@@ -1241,6 +1377,28 @@
                         document.mozCancelFullScreen();
                     }
                 });
+
+                // Restrições específicas para mobile
+                if (window.innerWidth <= 768) {
+
+                    // Desabilitar controles de tempo em mobile
+                    video.addEventListener('seeking', function(e) {
+                        e.preventDefault();
+                        video.currentTime = 0;
+                    });
+
+                    // Desabilitar duplo clique para tela cheia em mobile
+                    video.addEventListener('dblclick', function(e) {
+                        e.preventDefault();
+                    });
+
+                    // Forçar apenas play/pause em mobile
+                    video.addEventListener('loadedmetadata', function() {
+                        video.controls = false;
+                        video.controlsList = 'nodownload nofullscreen noremoteplayback';
+                        video.disablePictureInPicture = true;
+                    });
+                }
             }
         });
 
