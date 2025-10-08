@@ -594,6 +594,13 @@
             cursor: pointer;
         }
 
+        /* Esconder overlay de som no desktop */
+        @media (min-width: 769px) {
+            .sound-activation-overlay {
+                display: none !important;
+            }
+        }
+
         .sound-activation-overlay.hidden {
             opacity: 0;
             pointer-events: none;
@@ -612,7 +619,6 @@
         .sound-icon {
             font-size: 50px;
             margin-bottom: 15px;
-            animation: bounce 1s infinite;
         }
 
         .sound-text-large {
@@ -629,11 +635,6 @@
             100% { transform: scale(1); }
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
 
         .video-controls {
             position: absolute;
@@ -1668,6 +1669,11 @@
 
             // Iniciar vídeo automaticamente
             function iniciarVideo() {
+                // No desktop, tentar iniciar com som ativado
+                if (window.innerWidth > 768) {
+                    video.muted = false;
+                }
+                
                 video.play().then(() => {
                     playPauseBtn.textContent = '⏸';
                     videoOverlay.classList.add('hidden');
@@ -1676,7 +1682,7 @@
                     console.log('Vídeo iniciado automaticamente');
                 }).catch(function(error) {
                     console.log('Autoplay bloqueado, aguardando interação do usuário');
-                    // Mostrar overlay de ativação de som se autoplay for bloqueado
+                    // Mostrar overlay de ativação de som se autoplay for bloqueado (apenas mobile)
                     verificarSom();
                 });
             }
@@ -1689,9 +1695,9 @@
                 console.log('Som ativado');
             }
 
-            // Mostrar overlay de ativação de som se o vídeo estiver mutado
+            // Mostrar overlay de ativação de som se o vídeo estiver mutado (apenas no mobile)
             function verificarSom() {
-                if (video.muted) {
+                if (video.muted && window.innerWidth <= 768) {
                     soundActivationOverlay.classList.remove('hidden');
                 } else {
                     soundActivationOverlay.classList.add('hidden');
@@ -1738,15 +1744,15 @@
                 ativarSom();
             });
 
-            // Eventos de toque para ativar som (apenas se estiver mutado)
+            // Eventos de toque para ativar som (apenas se estiver mutado e no mobile)
             document.addEventListener('touchstart', function() {
-                if (video.muted) {
+                if (video.muted && window.innerWidth <= 768) {
                     ativarSom();
                 }
             }, { once: true });
             
             document.addEventListener('click', function() {
-                if (video.muted) {
+                if (video.muted && window.innerWidth <= 768) {
                     ativarSom();
                 }
             }, { once: true });
