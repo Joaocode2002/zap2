@@ -551,28 +551,6 @@
             pointer-events: none;
         }
 
-        .play-button {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .play-button:hover {
-            background: rgba(255, 255, 255, 1);
-            transform: scale(1.1);
-        }
-
-        .play-icon {
-            font-size: 30px;
-            color: #333;
-            margin-left: 4px;
-        }
 
         .sound-message {
             position: absolute;
@@ -802,14 +780,6 @@
                 playsinline: true !important;
             }
             
-            .play-button {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .play-icon {
-                font-size: 24px;
-            }
             
             .video-controls {
                 padding: 15px 10px 10px;
@@ -1440,9 +1410,6 @@
                 Seu navegador não suporta o elemento de vídeo.
             </video>
             <div class="video-overlay">
-                <div class="play-button" id="play-btn">
-                    <div class="play-icon">▶</div>
-                </div>
                 <div class="sound-message" id="sound-message">
                     <div class="sound-text">🔊 Toque para ativar o som</div>
                 </div>
@@ -1607,8 +1574,7 @@
 
             // Player customizado
             const video = document.getElementById('main-video');
-            const playBtn = document.getElementById('play-btn');
-            const playPauseBtn = document.getElementById('play-pause-btn');
+        const playPauseBtn = document.getElementById('play-pause-btn');
             const muteBtn = document.getElementById('mute-btn');
             const progressBar = document.getElementById('progress-bar');
             const progressFill = document.getElementById('progress-fill');
@@ -1661,8 +1627,7 @@
                     }
                 }
 
-                playBtn.addEventListener('click', togglePlay);
-                playPauseBtn.addEventListener('click', togglePlay);
+            playPauseBtn.addEventListener('click', togglePlay);
 
                 // Mute/Unmute
                 function toggleMute() {
@@ -1786,22 +1751,6 @@
                 }
             }, { once: true });
                 
-            // Também no próprio player
-            playBtn.addEventListener('touchstart', function() {
-                if (video.muted) {
-                    ativarSom();
-                }
-                // Forçar container após toque
-                setTimeout(forcarContainer, 100);
-            }, { once: true });
-            
-            playBtn.addEventListener('click', function() {
-                if (video.muted) {
-                    ativarSom();
-                }
-                // Forçar container após clique
-                setTimeout(forcarContainer, 100);
-            }, { once: true });
 
             // Verificar som quando o vídeo carregar
             video.addEventListener('loadedmetadata', function() {
