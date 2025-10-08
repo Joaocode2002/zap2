@@ -1134,9 +1134,11 @@
             }
         }
 
-        // Executar quando a página carregar
+        // Executar quando a página carregar com delay de 1.5 segundos
         document.addEventListener('DOMContentLoaded', function() {
-            atualizarVagas();
+            setTimeout(function() {
+                atualizarVagas();
+            }, 1500);
         });
 
         function redirectToWhatsApp() {
