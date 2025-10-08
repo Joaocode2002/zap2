@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Método Delay - LUCRO REAL</title>
     <link rel="icon" type="image/png" href="bola.png">
     <link rel="shortcut icon" type="image/png" href="bola.png">
@@ -530,6 +530,24 @@
                 width: 100% !important;
                 max-width: 100% !important;
                 height: auto !important;
+                position: relative !important;
+                z-index: 1 !important;
+            }
+            
+            /* Bloquear zoom e tela cheia em mobile */
+            #main-video::-webkit-media-controls-fullscreen-button {
+                display: none !important;
+                visibility: hidden !important;
+            }
+            
+            #main-video::-webkit-media-controls {
+                overflow: hidden !important;
+            }
+            
+            /* Para Firefox mobile */
+            #main-video::-moz-media-controls-fullscreen-button {
+                display: none !important;
+                visibility: hidden !important;
             }
         }
 
@@ -1322,6 +1340,60 @@
                     video.style.scale = '1';
                     video.style.objectFit = 'contain';
                 });
+
+                // Bloquear zoom e tela cheia em mobile
+                if (window.innerWidth <= 768) {
+                    // Bloquear duplo toque para zoom
+                    video.addEventListener('touchstart', function(e) {
+                        if (e.touches.length > 1) {
+                            e.preventDefault();
+                        }
+                    });
+
+                    // Bloquear gestos de pinch/zoom
+                    video.addEventListener('touchmove', function(e) {
+                        if (e.touches.length > 1) {
+                            e.preventDefault();
+                        }
+                    });
+
+                    // Bloquear duplo clique para tela cheia
+                    video.addEventListener('dblclick', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    });
+
+                    // Forçar saída de tela cheia se entrar
+                    video.addEventListener('fullscreenchange', function() {
+                        if (document.fullscreenElement === video) {
+                            document.exitFullscreen().catch(() => {});
+                        }
+                    });
+
+                    video.addEventListener('webkitfullscreenchange', function() {
+                        if (document.webkitFullscreenElement === video) {
+                            document.webkitExitFullscreen().catch(() => {});
+                        }
+                    });
+
+                    video.addEventListener('mozfullscreenchange', function() {
+                        if (document.mozFullScreenElement === video) {
+                            document.mozCancelFullScreen().catch(() => {});
+                        }
+                    });
+
+                    // Bloquear orientação automática
+                    video.addEventListener('play', function() {
+                        video.style.transform = 'none';
+                        video.style.zoom = '1';
+                        video.style.scale = '1';
+                        video.style.objectFit = 'contain';
+                        video.style.width = '100%';
+                        video.style.maxWidth = '500px';
+                        video.style.height = 'auto';
+                    });
+                }
 
                 // Iniciar vídeo no primeiro toque na tela
                 let videoIniciado = false;
