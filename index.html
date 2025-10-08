@@ -369,6 +369,11 @@
             margin: 0;
         }
 
+        #numero-vagas {
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
         .header-bottom {
             background: #000;
             height: 4px;
@@ -402,6 +407,16 @@
 
         .logo-image:hover {
             transform: scale(1.05);
+        }
+
+        .logo-section a {
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-section a:hover {
+            transform: scale(1.02);
         }
 
         .footer {
@@ -496,7 +511,7 @@
 
         .arrow {
             color: #ff6b6b;
-            font-size: 48px;
+            font-size: 144px;
             text-align: center;
             margin: 30px 0;
             font-family: 'Chakra Petch', 'Arial', sans-serif !important;
@@ -1007,21 +1022,23 @@
 
     <div class="header">
         <div class="header-banner">
-            <div class="header-text">ÚLTIMAS VAGAS</div>
+            <div class="header-text" id="vagas-text">ÚLTIMAS <span id="numero-vagas">17</span> VAGAS GRATUITAS</div>
         </div>
         <div class="header-bottom"></div>
     </div>
 
     <div class="container">
         <div class="logo-section">
-            <img src="logo.png" alt="Logo" class="logo-image">
+            <a href="https://www.instagram.com/_pablogomees/" target="_blank" rel="noopener noreferrer">
+                <img src="logo.png" alt="Logo" class="logo-image">
+            </a>
         </div>
         
         <div class="left-section">
             <div class="content-box animated fadeInLeft">
                 <div class="method-title animated fadeInLeft">GRUPO FREE</div>
                 <div class="main-headline animated fadeInRight">
-                    Entre e comece a faturar hoje totalmente de GRAÇA!
+                    ENTRE AGORA E LUCRE COM O DELAY ESPORTIVO, SEM RISCOS E COM LUCRO GARANTIDO!
                 </div>
                 <div class="arrow animated fadeInLeft">↓</div>
                 <button class="cta-button pulse animated fadeInRight" onclick="redirectToWhatsApp()">
@@ -1087,6 +1104,39 @@
         // Desabilitar arrastar imagens
         document.addEventListener('dragstart', function(e) {
             e.preventDefault();
+        });
+
+        // Sistema de aleatoriedade para vagas
+        function atualizarVagas() {
+            // Obter o número atual de vagas do localStorage ou usar 17 como padrão
+            let vagasAtuais = parseInt(localStorage.getItem('vagasRestantes')) || 17;
+            
+            // Se ainda há vagas disponíveis (mais de 1), diminuir em 1
+            if (vagasAtuais > 1) {
+                vagasAtuais -= 1;
+                localStorage.setItem('vagasRestantes', vagasAtuais);
+                
+                // Atualizar o número na tela
+                document.getElementById('numero-vagas').textContent = vagasAtuais;
+                
+                // Adicionar efeito visual de mudança
+                const elementoVagas = document.getElementById('numero-vagas');
+                elementoVagas.style.transform = 'scale(1.2)';
+                elementoVagas.style.color = '#ff6b6b';
+                
+                setTimeout(() => {
+                    elementoVagas.style.transform = 'scale(1)';
+                    elementoVagas.style.color = 'white';
+                }, 500);
+            } else {
+                // Se chegou a 1, mudar a mensagem para "ÚLTIMA VAGA GRATUITA"
+                document.getElementById('vagas-text').innerHTML = 'ÚLTIMA VAGA GRATUITA';
+            }
+        }
+
+        // Executar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            atualizarVagas();
         });
 
         function redirectToWhatsApp() {
