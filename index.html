@@ -594,10 +594,10 @@
             cursor: pointer;
         }
 
-        /* Esconder overlay de som no desktop */
+        /* Mostrar overlay de som em todos os dispositivos */
         @media (min-width: 769px) {
             .sound-activation-overlay {
-                display: none !important;
+                display: flex !important;
             }
         }
 
@@ -1406,7 +1406,7 @@
                 </div>
                 <div class="video-container animated fadeInLeft">
                     <div class="custom-video-player" id="custom-player">
-            <video id="main-video" preload="metadata" muted playsinline webkit-playsinline>
+            <video id="main-video" preload="metadata" muted playsinline webkit-playsinline autoplay>
                 <source src="video.mp4" type="video/mp4">
                 Seu navegador não suporta o elemento de vídeo.
             </video>
@@ -1672,19 +1672,35 @@
                 // No desktop, tentar iniciar com som ativado
                 if (window.innerWidth > 768) {
                     video.muted = false;
+                    video.volume = 1.0; // Volume máximo no desktop
                 }
                 
-                video.play().then(() => {
-                    playPauseBtn.textContent = '⏸';
-                    videoOverlay.classList.add('hidden');
-                    soundMessage.classList.remove('show');
-                    verificarSom(); // Verificar se precisa mostrar overlay de som
-                    console.log('Vídeo iniciado automaticamente');
-                }).catch(function(error) {
-                    console.log('Autoplay bloqueado, aguardando interação do usuário');
-                    // Mostrar overlay de ativação de som se autoplay for bloqueado (apenas mobile)
-                    verificarSom();
-                });
+                // Tentar autoplay com som no desktop
+                const playPromise = video.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        playPauseBtn.textContent = '⏸';
+                        videoOverlay.classList.add('hidden');
+                        soundMessage.classList.remove('show');
+                        verificarSom();
+                        console.log('Vídeo iniciado automaticamente com som');
+                    }).catch(function(error) {
+                        console.log('Autoplay com som bloqueado, tentando mutado');
+                        // Se falhar com som, tentar mutado
+                        video.muted = true;
+                        video.play().then(() => {
+                            playPauseBtn.textContent = '⏸';
+                            videoOverlay.classList.add('hidden');
+                            soundMessage.classList.add('show');
+                            soundActivationOverlay.classList.remove('hidden'); // Mostrar overlay de som
+                            console.log('Vídeo iniciado automaticamente mutado');
+                        }).catch(function(error2) {
+                            console.log('Autoplay completamente bloqueado');
+                            verificarSom();
+                        });
+                    });
+                }
             }
 
             // Função para ativar som no primeiro toque
@@ -1695,9 +1711,9 @@
                 console.log('Som ativado');
             }
 
-            // Mostrar overlay de ativação de som se o vídeo estiver mutado (apenas no mobile)
+            // Mostrar overlay de ativação de som se o vídeo estiver mutado (em todos os dispositivos)
             function verificarSom() {
-                if (video.muted && window.innerWidth <= 768) {
+                if (video.muted) {
                     soundActivationOverlay.classList.remove('hidden');
                 } else {
                     soundActivationOverlay.classList.add('hidden');
@@ -1744,15 +1760,15 @@
                 ativarSom();
             });
 
-            // Eventos de toque para ativar som (apenas se estiver mutado e no mobile)
+            // Eventos de toque para ativar som (em todos os dispositivos se estiver mutado)
             document.addEventListener('touchstart', function() {
-                if (video.muted && window.innerWidth <= 768) {
+                if (video.muted) {
                     ativarSom();
                 }
             }, { once: true });
             
             document.addEventListener('click', function() {
-                if (video.muted && window.innerWidth <= 768) {
+                if (video.muted) {
                     ativarSom();
                 }
             }, { once: true });
