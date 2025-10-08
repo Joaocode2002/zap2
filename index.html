@@ -500,6 +500,10 @@
             height: auto;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            object-fit: contain;
+            transform: none !important;
+            zoom: 1 !important;
+            scale: 1 !important;
         }
 
         /* Esconder botão de tela cheia */
@@ -516,83 +520,16 @@
             display: none !important;
         }
 
-        /* Controles específicos para mobile */
+        /* Garantir que o vídeo respeite o container */
         @media (max-width: 768px) {
-            #main-video::-webkit-media-controls-panel {
-                display: none !important;
-            }
-            
-            #main-video::-webkit-media-controls-play-button {
-                display: block !important;
-            }
-            
-            #main-video::-webkit-media-controls-timeline {
-                display: none !important;
-            }
-            
-            #main-video::-webkit-media-controls-current-time-display {
-                display: none !important;
-            }
-            
-            #main-video::-webkit-media-controls-time-remaining-display {
-                display: none !important;
-            }
-            
-            #main-video::-webkit-media-controls-mute-button {
-                display: block !important;
-            }
-            
-            #main-video::-webkit-media-controls-volume-slider {
-                display: block !important;
-            }
-            
-            #main-video::-webkit-media-controls-fullscreen-button {
-                display: none !important;
-            }
-            
-            #main-video::-webkit-media-controls-rewind-button {
-                display: none !important;
-            }
-            
-            #main-video::-webkit-media-controls-return-to-realtime-button {
-                display: none !important;
-            }
-            
-            #main-video::-webkit-media-controls-toggle-closed-captions-button {
-                display: none !important;
-            }
-            
-            /* Para Firefox mobile */
-            #main-video::-moz-media-controls-panel {
-                display: none !important;
-            }
-            
-            #main-video::-moz-media-controls-play-button {
-                display: block !important;
-            }
-            
-            #main-video::-moz-media-controls-timeline {
-                display: none !important;
-            }
-            
-            #main-video::-moz-media-controls-current-time-display {
-                display: none !important;
-            }
-            
-            #main-video::-moz-media-controls-time-remaining-display {
-                display: none !important;
-            }
-            
-            #main-video::-moz-media-controls-mute-button {
-                display: block !important;
-            }
-            
-            #main-video::-moz-media-controls-volume-slider {
-                display: block !important;
-            }
-            
-            #main-video::-moz-media-controls-fullscreen-button {
-                display: none !important;
+            #main-video {
+                transform: none !important;
+                zoom: 1 !important;
+                scale: 1 !important;
+                object-fit: contain !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
             }
         }
 
@@ -1378,27 +1315,13 @@
                     }
                 });
 
-                // Restrições específicas para mobile
-                if (window.innerWidth <= 768) {
-
-                    // Desabilitar controles de tempo em mobile
-                    video.addEventListener('seeking', function(e) {
-                        e.preventDefault();
-                        video.currentTime = 0;
-                    });
-
-                    // Desabilitar duplo clique para tela cheia em mobile
-                    video.addEventListener('dblclick', function(e) {
-                        e.preventDefault();
-                    });
-
-                    // Forçar apenas play/pause em mobile
-                    video.addEventListener('loadedmetadata', function() {
-                        video.controls = false;
-                        video.controlsList = 'nodownload nofullscreen noremoteplayback';
-                        video.disablePictureInPicture = true;
-                    });
-                }
+                // Garantir que o vídeo respeite o container
+                video.addEventListener('loadedmetadata', function() {
+                    video.style.transform = 'none';
+                    video.style.zoom = '1';
+                    video.style.scale = '1';
+                    video.style.objectFit = 'contain';
+                });
 
                 // Iniciar vídeo no primeiro toque na tela
                 let videoIniciado = false;
