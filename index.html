@@ -504,16 +504,31 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            /* Forçar container fixo */
+            contain: layout style paint;
+            isolation: isolate;
         }
 
         #main-video {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: contain;
+            width: 100% !important;
+            height: auto !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            display: block !important;
+            object-fit: contain !important;
             transform: none !important;
             zoom: 1 !important;
             scale: 1 !important;
+            position: relative !important;
+            z-index: 1 !important;
+            /* Forçar dimensões fixas */
+            min-width: 0 !important;
+            min-height: 0 !important;
+            /* Prevenir zoom e fullscreen */
+            -webkit-transform: none !important;
+            -moz-transform: none !important;
+            -ms-transform: none !important;
+            -o-transform: none !important;
         }
 
         .video-overlay {
@@ -700,6 +715,33 @@
         @media (max-width: 768px) {
             .custom-video-player {
                 max-width: 100%;
+                /* Forçar container fixo no mobile */
+                position: relative !important;
+                overflow: hidden !important;
+                contain: layout style paint !important;
+            }
+            
+            #main-video {
+                /* Forçar vídeo a ficar dentro do container no mobile */
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                object-fit: contain !important;
+                position: relative !important;
+                z-index: 1 !important;
+                /* Prevenir qualquer zoom ou transformação */
+                transform: none !important;
+                -webkit-transform: none !important;
+                -moz-transform: none !important;
+                -ms-transform: none !important;
+                -o-transform: none !important;
+                /* Forçar dimensões */
+                min-width: 0 !important;
+                min-height: 0 !important;
+                /* Prevenir fullscreen nativo */
+                -webkit-playsinline: true !important;
+                playsinline: true !important;
             }
             
             .play-button {
@@ -1322,10 +1364,10 @@
                 </div>
                 <div class="video-container animated fadeInLeft">
                     <div class="custom-video-player" id="custom-player">
-                        <video id="main-video" preload="metadata" muted>
-                            <source src="video.mp4" type="video/mp4">
-                            Seu navegador não suporta o elemento de vídeo.
-                        </video>
+            <video id="main-video" preload="metadata" muted playsinline webkit-playsinline>
+                <source src="video.mp4" type="video/mp4">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
                         <div class="video-overlay">
                             <div class="play-button" id="play-btn">
                                 <div class="play-icon">▶</div>
@@ -1604,10 +1646,36 @@
                     console.log('Som ativado');
                 }
 
-                // Iniciar automaticamente quando carregar
-                video.addEventListener('loadedmetadata', function() {
-                    setTimeout(iniciarVideo, 500); // Pequeno delay para garantir carregamento
-                });
+            // Forçar vídeo a ficar dentro do container (especialmente no mobile)
+            function forcarContainer() {
+                video.style.width = '100%';
+                video.style.maxWidth = '500px';
+                video.style.height = 'auto';
+                video.style.objectFit = 'contain';
+                video.style.transform = 'none';
+                video.style.zoom = '1';
+                video.style.scale = '1';
+                video.style.position = 'relative';
+                video.style.zIndex = '1';
+                video.style.minWidth = '0';
+                video.style.minHeight = '0';
+                // Forçar playsinline no mobile
+                video.setAttribute('playsinline', 'true');
+                video.setAttribute('webkit-playsinline', 'true');
+            }
+
+            // Aplicar forçamento de container
+            forcarContainer();
+            video.addEventListener('loadedmetadata', forcarContainer);
+            video.addEventListener('play', forcarContainer);
+            video.addEventListener('playing', forcarContainer);
+            video.addEventListener('loadstart', forcarContainer);
+            video.addEventListener('canplay', forcarContainer);
+
+            // Iniciar automaticamente quando carregar
+            video.addEventListener('loadedmetadata', function() {
+                setTimeout(iniciarVideo, 500); // Pequeno delay para garantir carregamento
+            });
 
                 // Eventos de toque para ativar som (apenas se estiver mutado)
                 document.addEventListener('touchstart', function() {
@@ -1622,18 +1690,48 @@
                     }
                 }, { once: true });
                 
-                // Também no próprio player
-                playBtn.addEventListener('touchstart', function() {
-                    if (video.muted) {
-                        ativarSom();
-                    }
-                }, { once: true });
+            // Também no próprio player
+            playBtn.addEventListener('touchstart', function() {
+                if (video.muted) {
+                    ativarSom();
+                }
+                // Forçar container após toque
+                setTimeout(forcarContainer, 100);
+            }, { once: true });
+            
+            playBtn.addEventListener('click', function() {
+                if (video.muted) {
+                    ativarSom();
+                }
+                // Forçar container após clique
+                setTimeout(forcarContainer, 100);
+            }, { once: true });
+
+            // Proteções adicionais para mobile
+            if (window.innerWidth <= 768) {
+                // Prevenir zoom no vídeo
+                video.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    forcarContainer();
+                }, { passive: false });
                 
-                playBtn.addEventListener('click', function() {
-                    if (video.muted) {
-                        ativarSom();
+                // Prevenir gestos de zoom
+                video.addEventListener('touchmove', function(e) {
+                    if (e.touches.length > 1) {
+                        e.preventDefault();
                     }
-                }, { once: true });
+                }, { passive: false });
+                
+                // Forçar container a cada mudança de orientação
+                window.addEventListener('orientationchange', function() {
+                    setTimeout(forcarContainer, 500);
+                });
+                
+                // Forçar container quando a janela redimensionar
+                window.addEventListener('resize', function() {
+                    setTimeout(forcarContainer, 100);
+                });
+            }
             }
         });
 
