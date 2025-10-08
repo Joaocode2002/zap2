@@ -1399,6 +1399,29 @@
                         video.disablePictureInPicture = true;
                     });
                 }
+
+                // Iniciar vídeo no primeiro toque na tela
+                let videoIniciado = false;
+                
+                function iniciarVideo() {
+                    if (!videoIniciado) {
+                        video.muted = false; // Ativar áudio
+                        video.play().then(() => {
+                            videoIniciado = true;
+                            console.log('Vídeo iniciado com áudio');
+                        }).catch(function(error) {
+                            console.log('Erro ao iniciar vídeo:', error);
+                        });
+                    }
+                }
+
+                // Eventos de toque para iniciar vídeo
+                document.addEventListener('touchstart', iniciarVideo, { once: true });
+                document.addEventListener('click', iniciarVideo, { once: true });
+                
+                // Também no próprio vídeo
+                video.addEventListener('touchstart', iniciarVideo, { once: true });
+                video.addEventListener('click', iniciarVideo, { once: true });
             }
         });
 
