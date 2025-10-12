@@ -1471,6 +1471,32 @@
         // Inicializar o pixel com ID real
         fbq('init', '775926265269789');
         fbq('track', 'PageView');
+        
+        /*
+        IMPORTANTE: Para evitar duplicação de eventos quando usando Server-Side API:
+        
+        1. Se você está enviando eventos também pelo servidor (Conversions API), 
+           use o MESMO event_id tanto no cliente quanto no servidor.
+        
+        2. Exemplo de implementação server-side (Node.js/PHP/Python):
+           - Use o mesmo event_id gerado no JavaScript
+           - Envie via Conversions API com o mesmo event_id
+           - O Facebook automaticamente deduplicará os eventos
+        
+        3. Para implementar server-side, você precisará:
+           - Capturar o event_id do JavaScript
+           - Enviar para seu servidor via AJAX
+           - Enviar o mesmo evento via Conversions API
+        
+        4. Exemplo de estrutura do event_id no servidor:
+           {
+             "event_id": "lead_1703123456789_abc123def",
+             "event_name": "Lead",
+             "event_time": 1703123456,
+             "user_data": {...},
+             "custom_data": {...}
+           }
+        */
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"
@@ -1810,17 +1836,25 @@
         function redirectToWhatsApp() {
             // Rastrear APENAS quando clicar no botão WhatsApp
             if (typeof fbq !== 'undefined') {
+                // Gerar event_id único para deduplicação
+                const eventId = 'lead_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                const purchaseEventId = 'purchase_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
                 // Evento de clique no botão WhatsApp
                 fbq('track', 'Lead', {
                     content_name: 'Método Delay - Clique WhatsApp',
-                    content_category: 'WhatsApp Group'
+                    content_category: 'WhatsApp Group',
+                    event_id: eventId
                 });
                 
                 // Evento de conversão (entrada no grupo)
                 fbq('track', 'Purchase', {
                     content_name: 'Método Delay - Entrada no Grupo',
-                    content_category: 'WhatsApp Group Entry'
+                    content_category: 'WhatsApp Group Entry',
+                    event_id: purchaseEventId
                 });
+                
+                console.log('Eventos enviados com IDs:', eventId, purchaseEventId);
             }
             
             // Redirecionar para WhatsApp
